@@ -1,21 +1,15 @@
-# **Epever Regulator Communicator**
+package se.divdev.epever;
 
-Read/write to your Epever Solar Panel Controller/Regulator
+import se.divdev.epever.data.*;
 
-**Fields that can be read/written had been separated into the following classes:**
+import java.time.Instant;
+import java.util.Arrays;
 
-* RealtimeData.class
-* RealtimeStatus.class
-* StatisticalParameter.class
-* BatterySettingParameter.class
-* SettingParameter.class
-* Coils.class
-* DiscreteInput.class
-* RatedData.class
+public class ExampleUsage {
 
-#### **Examples:**
+    public static void main(String... args) {
 
-**Set date and time**
+    }
 
     public void setRtc() throws RegulatorException {
         RegulatorCommunicator communicator = new RegulatorCommunicatorImpl("/dev/ttyXRUSB0");
@@ -23,9 +17,6 @@ Read/write to your Epever Solar Panel Controller/Regulator
         communicator.setRTC(Instant.now());
         communicator.disconnect();
     }
-
-
-**Read from Statistical Parameter**
 
     public void readStatisticalParameter() throws RegulatorException {
         RegulatorCommunicator communicator = new RegulatorCommunicatorImpl("/dev/ttyXRUSB0");
@@ -35,9 +26,6 @@ Read/write to your Epever Solar Panel Controller/Regulator
         communicator.disconnect();
     }
 
-
-**Read Battery Setting Parameter**
-
     public void readBatterySettingParameter() throws RegulatorException {
         RegulatorCommunicator communicator = new RegulatorCommunicatorImpl("/dev/ttyXRUSB0");
         communicator.connect();
@@ -45,8 +33,6 @@ Read/write to your Epever Solar Panel Controller/Regulator
         System.out.println(o.batteryType);
         communicator.disconnect();
     }
-
-**Read data from all fields into raw data map**
 
     public void readAllData() throws RegulatorException {
         RegulatorCommunicator communicator = new RegulatorCommunicatorImpl("/dev/ttyXRUSB0");
@@ -69,8 +55,4 @@ Read/write to your Epever Solar Panel Controller/Regulator
         System.out.println(raw);
         communicator.disconnect();
     }
-
-Note:
-- Only tested on Epever 4210N, but should work on all models using the same protocol
-- Only tested on linux
-
+}
