@@ -57,7 +57,7 @@ public class Regulator {
 
         for (int address : addresses) {
             if (clusterInformation == null || clusterInformation.nextAddress() != address) {
-                clusterInformation = new ClusterInformation(address, 1);
+                clusterInformation = new ClusterInformation(address);
                 result.add(clusterInformation);
                 continue;
             }
@@ -83,9 +83,9 @@ public class Regulator {
 
         public int quantity;
 
-        public ClusterInformation(int address, int quantity) {
+        public ClusterInformation(int address) {
             this.address = address;
-            this.quantity = quantity;
+            this.quantity = 1;
         }
 
         private void increase() {
@@ -118,10 +118,10 @@ public class Regulator {
         return regulatorData;
     }
 
-    public static <T> T from(final RegulatorRawData data, Class<T> from) {
+    public static <T> T from(final RegulatorRawData data, Class<T> to) {
         try {
-            T result = from.getDeclaredConstructor().newInstance();
-            for (FieldInformation information : fieldInformation(from)) {
+            T result = to.getDeclaredConstructor().newInstance();
+            for (FieldInformation information : fieldInformation(to)) {
                 EpeverMapper epeverMapper = information.epeverMapper;
                 DataMapper mapper = DataMapper.getInstance(epeverMapper.clazz());
                 int[] values = new int[mapper.quantity()];
@@ -130,6 +130,30 @@ public class Regulator {
                 }
 
                 information.field.set(result, mapper.decode(values));
+            }
+            return result;
+        } catch (Exception e) {
+            // TODO: Fix exception
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static RegulatorRawData toRaw(Object o) {
+        try {
+            RegulatorRawData result = new RegulatorRawData();
+            Class<?> clazz = o.getClass();
+            for (FieldInformation information : fieldInformation(clazz)) {
+                EpeverMapper epeverMapper = information.epeverMapper;
+                DataMapper mapper = DataMapper.getInstance(epeverMapper.clazz());
+                Object value = information.field.get(o);
+                if (value == null) {
+                    continue;
+                }
+                int[] values = mapper.encode(information.field.get(o));
+
+                for (int i = 0; i < values.length; i++) {
+                    result.put(information.epeverMapper.address() + i, values[i]);
+                }
             }
             return result;
         } catch (Exception e) {

@@ -119,12 +119,4 @@ public class RegulatorCommunicatorImpl implements RegulatorCommunicator {
     public boolean write(int[] data, int startAddress) {
         return findHolder(startAddress).write(startAddress, data);
     }
-
-    @Override
-    public void setRTC(Instant instant) {
-        InstantMapper mapper = DataMapper.getInstance(InstantMapper.class);
-        int[] data = mapper.encode(instant);
-        boolean success = write(data, 0x9013);
-        LOGGER.info("Writing date ({}) to regulator: {}", instant, success);
-    }
 }

@@ -22,10 +22,6 @@ public class RegulatorException extends Exception {
 
     public static class DisconnectException extends RegulatorException {
 
-        public DisconnectException(String message) {
-            super(message);
-        }
-
         public DisconnectException(String message, Throwable cause) {
             super(message, cause);
         }

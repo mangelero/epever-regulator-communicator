@@ -14,7 +14,7 @@ public class ExampleUsage {
     public void setRtc() throws RegulatorException {
         RegulatorCommunicator communicator = new RegulatorCommunicatorImpl("/dev/ttyXRUSB0");
         communicator.connect();
-        communicator.setRTC(Instant.now());
+        communicator.setRtc(Instant.now());
         communicator.disconnect();
     }
 
