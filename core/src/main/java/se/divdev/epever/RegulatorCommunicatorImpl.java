@@ -10,9 +10,7 @@ import com.intelligt.modbus.jlibmodbus.serial.SerialPort.Parity;
 import com.intelligt.modbus.jlibmodbus.serial.SerialPortException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.divdev.epever.DataMapper.InstantMapper;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +62,18 @@ public class RegulatorCommunicatorImpl implements RegulatorCommunicator {
             LOGGER.error("Error setting up regulator!", e);
             throw new RuntimeException("Error setting up regulator", e);
         }
+    }
+
+    /**
+     * Constructor for testing
+     *
+     * @param serverAddress
+     * @param modbusMaster
+     */
+    RegulatorCommunicatorImpl(final int serverAddress,
+                              final ModbusMaster modbusMaster) {
+        this.serverAddress = serverAddress;
+        this.modbusMaster = modbusMaster;
     }
 
     private void registerHolders() {
