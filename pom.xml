@@ -17,10 +17,16 @@
     <modules>
         <module>api</module>
         <module>core</module>
+        <module>examples</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>se.divdev.epever</groupId>
+                <artifactId>epever-regulator-communicator-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>se.divdev.epever</groupId>
                 <artifactId>epever-regulator-communicator-api</artifactId>
