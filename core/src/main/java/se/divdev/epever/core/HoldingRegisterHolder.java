@@ -7,9 +7,7 @@ import com.intelligt.modbus.jlibmodbus.exception.ModbusProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HoldingRegisterHolder implements Holder {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(HoldingRegisterHolder.class);
+public class HoldingRegisterHolder implements Holder<int[]> {
 
     private final ModbusMaster modbusMaster;
 
@@ -27,24 +25,12 @@ public class HoldingRegisterHolder implements Holder {
     }
 
     @Override
-    public int[] read(int startAddress, int quantity) {
-        try {
-            return modbusMaster.readHoldingRegisters(serverAddress, startAddress, quantity);
-        } catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
-            LOGGER.error("Error reading from holding register. Server Address: {}, Start Address: {}, Quantity: {}", serverAddress, startAddress, quantity, e);
-            // Lets be forgiving about errors and return an empty array
-            return new int[0];
-        }
+    public int[] readRaw(int startAddress, int quantity) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
+        return modbusMaster.readHoldingRegisters(serverAddress, startAddress, quantity);
     }
 
     @Override
-    public boolean write(int startAddress, int[] data) {
-        try {
-            modbusMaster.writeMultipleRegisters(serverAddress, startAddress, data);
-            return true;
-        } catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
-            LOGGER.error("Error writing to holding register. Server Address: {}, Start Address: {}, Quantity: {}", serverAddress, startAddress, data.length, e);
-            return false;
-        }
+    public void writeRaw(int startAddress, int[] data) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
+        modbusMaster.writeMultipleRegisters(serverAddress, startAddress, data);
     }
 }
