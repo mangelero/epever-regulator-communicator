@@ -20,6 +20,11 @@ public class RegulatorCommunicatorTest {
         RegulatorRawData data = new RegulatorRawData();
 
         @Override
+        public boolean isConnected() {
+            return true;
+        }
+
+        @Override
         public void connect() {
             data.clear();
         }

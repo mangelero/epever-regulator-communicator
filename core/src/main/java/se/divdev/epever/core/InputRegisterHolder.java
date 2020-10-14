@@ -4,8 +4,6 @@ import com.intelligt.modbus.jlibmodbus.ModbusMaster;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusNumberException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusProtocolException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class InputRegisterHolder implements Holder<int[]> {
 

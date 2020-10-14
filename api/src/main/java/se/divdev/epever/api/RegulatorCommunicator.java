@@ -10,6 +10,13 @@ public interface RegulatorCommunicator {
     Logger LOGGER = LoggerFactory.getLogger(RegulatorCommunicator.class);
 
     /**
+     * Check if modbus is connected
+     *
+     * @return true if connected, false otherwise
+     */
+    boolean isConnected();
+
+    /**
      * Connect to the controller
      *
      * @throws RegulatorException.ConnectException When a connect failure occurs

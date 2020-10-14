@@ -3,14 +3,13 @@ package se.divdev.epever.core;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusNumberException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusProtocolException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jssc.SerialPortException;
+import jssc.SerialPortTimeoutException;
+import se.divdev.epever.api.RegulatorException;
 
 import java.util.function.Function;
 
 public interface Holder<T> {
-
-    Logger LOGGER = LoggerFactory.getLogger(Holder.class);
 
     boolean handlesAddress(int startAddress);
 
@@ -38,30 +37,40 @@ public interface Holder<T> {
         return result;
     }
 
-    default int[] read(int startAddress, int quantity) {
+    default int[] read(int startAddress, int quantity) throws RegulatorException {
         try {
             return decodeMethod().apply(readRaw(startAddress, quantity));
         } catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
-            LOGGER.error("Error reading from Start Address: {}, Quantity: {}", startAddress, quantity, e);
-            // Lets be forgiving about errors and return an empty array
-            return new int[0];
+            throw mapException(e);
         }
     }
 
-    default boolean write(int startAddress, int[] data) {
+    default void write(int startAddress, int[] data) throws RegulatorException {
         try {
             writeRaw(startAddress, encodeMethod().apply(data));
-            return true;
         } catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
-            LOGGER.error("Error writing to Start Address: {}, Quantity: {}", startAddress, data.length, e);
+            throw mapException(e);
         }
-        return false;
     }
 
     T readRaw(int startAddress, int quantity) throws ModbusProtocolException, ModbusNumberException, ModbusIOException;
 
     default void writeRaw(int startAddress, T data) throws ModbusProtocolException, ModbusNumberException, ModbusIOException {
         throw new UnsupportedOperationException("Write not supported to start address " + startAddress);
+    }
+
+    default RegulatorException mapException(Exception e) throws RegulatorException {
+        Throwable cause = e;
+        do {
+            if (cause instanceof SerialPortTimeoutException) {
+                return new RegulatorException.TimeoutException(e);
+            } else if (cause instanceof SerialPortException) {
+                if (cause.getMessage().contains("Port not opened")) {
+                    return new RegulatorException.PortNotOpenedException(e);
+                }
+            }
+        } while ((cause = cause.getCause()) != null);
+        return new RegulatorException("Unknown error occurred", e);
     }
 }
 

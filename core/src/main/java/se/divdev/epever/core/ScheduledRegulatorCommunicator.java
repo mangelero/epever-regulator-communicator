@@ -42,12 +42,34 @@ public class ScheduledRegulatorCommunicator implements RegulatorCommunicator {
 
     private final List<Consumer<RegulatorRawData>> callbacks = new ArrayList<>();
 
+    private final boolean keepAlive;
+
     private Future readFuture;
 
+    /**
+     * Construct the scheduled regulator communicator service
+     *
+     * @param regulatorCommunicator The underlying regulator communicator to use
+     * @param executorService       Executor service to be used
+     */
     public ScheduledRegulatorCommunicator(final RegulatorCommunicator regulatorCommunicator,
                                           final ScheduledExecutorService executorService) {
+        this(regulatorCommunicator, executorService, true);
+    }
+
+    /**
+     * Construct the scheduled regulator communicator service
+     *
+     * @param regulatorCommunicator The underlying regulator communicator to use
+     * @param executorService       Executor service to be used
+     * @param keepAlive             Set to true to keep the connection to the controller alive between reads. Set to false if log is spammed with timeout exceptions
+     */
+    public ScheduledRegulatorCommunicator(final RegulatorCommunicator regulatorCommunicator,
+                                          final ScheduledExecutorService executorService,
+                                          final boolean keepAlive) {
         this.regulatorCommunicator = regulatorCommunicator;
         this.executorService = executorService;
+        this.keepAlive = keepAlive;
     }
 
     /**
@@ -75,7 +97,31 @@ public class ScheduledRegulatorCommunicator implements RegulatorCommunicator {
         executorService.submit(() -> callback.accept(data));
     }
 
+    private void connectSilent() {
+        try {
+            if (!isConnected()) {
+                connect();
+            }
+        } catch (RegulatorException.ConnectException e) {
+            LOGGER.error("Failed to connect", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void disconnectSilent() {
+        if (keepAlive) {
+            return;
+        }
+        try {
+            disconnect();
+        } catch (RegulatorException.DisconnectException e) {
+            LOGGER.error("Failed to disconnect", e);
+            throw new RuntimeException(e);
+        }
+    }
+
     private void read() {
+        connectSilent();
         List<Class<?>> readFrom = new ArrayList<>(ALWAYS);
         if (readAllData.compareAndSet(true, false)) {
             readFrom.addAll(SOMETIMES);
@@ -85,6 +131,7 @@ public class ScheduledRegulatorCommunicator implements RegulatorCommunicator {
                 .forEach(data::merge);
 
         notifyCallbacks();
+        disconnectSilent();
     }
 
     /**
@@ -108,6 +155,11 @@ public class ScheduledRegulatorCommunicator implements RegulatorCommunicator {
             readFuture.cancel(true);
         }
         disconnect();
+    }
+
+    @Override
+    public boolean isConnected() {
+        return regulatorCommunicator.isConnected();
     }
 
     @Override

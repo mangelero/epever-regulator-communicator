@@ -86,15 +86,20 @@ public class RegulatorCommunicatorImpl implements RegulatorCommunicator {
     }
 
     @Override
+    public boolean isConnected() {
+        return modbusMaster.isConnected();
+    }
+
+    @Override
     public void connect() throws RegulatorException.ConnectException {
         try {
-            if (modbusMaster.isConnected()) {
+            if (isConnected()) {
                 throw new RegulatorException.ConnectException("Already connected");
             }
-            LOGGER.info("Connecting to: {}", serialParameters.getDevice());
+            LOGGER.debug("Connecting to: {}", serialParameters.getDevice());
             modbusMaster.setResponseTimeout(Modbus.MAX_RESPONSE_TIMEOUT);
             modbusMaster.connect();
-            LOGGER.info("Connected to: {}", serialParameters.getDevice());
+            LOGGER.debug("Connected to: {}", serialParameters.getDevice());
         } catch (ModbusIOException e) {
             throw new RegulatorException.ConnectException("Failed to connect", e);
         }
@@ -103,10 +108,10 @@ public class RegulatorCommunicatorImpl implements RegulatorCommunicator {
     @Override
     public void disconnect() throws RegulatorException.DisconnectException {
         try {
-            LOGGER.info("Disconnecting from: {}", serialParameters.getDevice());
+            LOGGER.debug("Disconnecting from: {}", serialParameters.getDevice());
             if (modbusMaster.isConnected()) {
                 modbusMaster.disconnect();
-                LOGGER.info("Disconnected from: {}", serialParameters.getDevice());
+                LOGGER.debug("Disconnected from: {}", serialParameters.getDevice());
             } else {
                 LOGGER.info("Not connected");
             }
@@ -122,13 +127,52 @@ public class RegulatorCommunicatorImpl implements RegulatorCommunicator {
                 .orElseThrow(() -> new IllegalArgumentException("No holder found for start address: " + startAddress));
     }
 
+    private void reconnect() {
+        LOGGER.info("Reconnecting ...");
+        try {
+            disconnect();
+            Thread.sleep(100);
+            connect();
+        } catch (Exception e) {
+            // Deal with this somewhere
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public int[] read(int startAddress, int quantity) {
-        return findHolder(startAddress).read(startAddress, quantity);
+        return read(startAddress, quantity, 0);
+    }
+
+    private int[] read(int startAddress, int quantity, int attempt) {
+        try {
+            return findHolder(startAddress).read(startAddress, quantity);
+        } catch (RegulatorException e) {
+            if (attempt >= 5) {
+                LOGGER.error("Error reading from Start Address: {}, Quantity: {}", startAddress, quantity, e);
+                return new int[0];
+            }
+            reconnect();
+            return read(startAddress, quantity, attempt + 1);
+        }
     }
 
     @Override
     public boolean write(int[] data, int startAddress) {
-        return findHolder(startAddress).write(startAddress, data);
+        return write(data, startAddress, 0);
+    }
+
+    private boolean write(int[] data, int startAddress, int attempt) {
+        try {
+            findHolder(startAddress).write(startAddress, data);
+            return true;
+        } catch (RegulatorException e) {
+            if (attempt >= 5) {
+                LOGGER.error("Error writing to Start Address: {}, Quantity: {}", startAddress, data.length, e);
+                return false;
+            }
+            reconnect();
+            return write(data, startAddress, attempt + 1);
+        }
     }
 }
