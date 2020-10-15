@@ -9,6 +9,21 @@ public interface RegulatorCommunicator {
 
     Logger LOGGER = LoggerFactory.getLogger(RegulatorCommunicator.class);
 
+
+    /**
+     * Number of retries before giving up when encountering errors on read/write
+     *
+     * @param retries The number of retries
+     */
+    void setRetryAttempts(int retries);
+
+    /**
+     * The period (ms) to sleep in between read/write error retries
+     *
+     * @param sleep Number of milliseconds to sleep
+     */
+    void setSleepBetweenRetriesMs(int sleep);
+
     /**
      * Check if modbus is connected
      *

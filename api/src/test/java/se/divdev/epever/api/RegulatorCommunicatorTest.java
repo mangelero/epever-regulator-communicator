@@ -20,6 +20,16 @@ public class RegulatorCommunicatorTest {
         RegulatorRawData data = new RegulatorRawData();
 
         @Override
+        public void setRetryAttempts(int retries) {
+
+        }
+
+        @Override
+        public void setSleepBetweenRetriesMs(int sleep) {
+
+        }
+
+        @Override
         public boolean isConnected() {
             return true;
         }

@@ -15,6 +15,7 @@ import se.divdev.epever.api.RegulatorException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class RegulatorCommunicatorImpl implements RegulatorCommunicator {
 
@@ -27,6 +28,10 @@ public class RegulatorCommunicatorImpl implements RegulatorCommunicator {
     private final int serverAddress;
 
     private final List<Holder> holders = new ArrayList<>();
+
+    private final AtomicInteger retryAttempts = new AtomicInteger(5);
+
+    private final AtomicInteger sleepBetweenRetriesMs = new AtomicInteger(100);
 
     public RegulatorCommunicatorImpl(final String device) {
         this(device, 1);
@@ -86,6 +91,16 @@ public class RegulatorCommunicatorImpl implements RegulatorCommunicator {
     }
 
     @Override
+    public void setRetryAttempts(int retries) {
+        retryAttempts.set(retries);
+    }
+
+    @Override
+    public void setSleepBetweenRetriesMs(int sleep) {
+        sleepBetweenRetriesMs.set(sleep);
+    }
+
+    @Override
     public boolean isConnected() {
         return modbusMaster.isConnected();
     }
@@ -127,11 +142,18 @@ public class RegulatorCommunicatorImpl implements RegulatorCommunicator {
                 .orElseThrow(() -> new IllegalArgumentException("No holder found for start address: " + startAddress));
     }
 
+    private void sleep(int ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+        }
+    }
+
     private void reconnect() {
         LOGGER.info("Reconnecting ...");
         try {
             disconnect();
-            Thread.sleep(100);
+            sleep(100);
             connect();
         } catch (Exception e) {
             // Deal with this somewhere
@@ -148,11 +170,12 @@ public class RegulatorCommunicatorImpl implements RegulatorCommunicator {
         try {
             return findHolder(startAddress).read(startAddress, quantity);
         } catch (RegulatorException e) {
-            if (attempt >= 5) {
+            if (attempt >= retryAttempts.get()) {
                 LOGGER.error("Error reading from Start Address: {}, Quantity: {}", startAddress, quantity, e);
+                reconnect();
                 return new int[0];
             }
-            reconnect();
+            sleep(sleepBetweenRetriesMs.get());
             return read(startAddress, quantity, attempt + 1);
         }
     }
@@ -167,11 +190,12 @@ public class RegulatorCommunicatorImpl implements RegulatorCommunicator {
             findHolder(startAddress).write(startAddress, data);
             return true;
         } catch (RegulatorException e) {
-            if (attempt >= 5) {
+            if (attempt >= retryAttempts.get()) {
                 LOGGER.error("Error writing to Start Address: {}, Quantity: {}", startAddress, data.length, e);
+                reconnect();
                 return false;
             }
-            reconnect();
+            sleep(sleepBetweenRetriesMs.get());
             return write(data, startAddress, attempt + 1);
         }
     }

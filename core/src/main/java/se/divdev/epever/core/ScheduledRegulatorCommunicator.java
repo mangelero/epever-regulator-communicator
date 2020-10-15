@@ -158,6 +158,16 @@ public class ScheduledRegulatorCommunicator implements RegulatorCommunicator {
     }
 
     @Override
+    public void setRetryAttempts(int retries) {
+        regulatorCommunicator.setRetryAttempts(retries);
+    }
+
+    @Override
+    public void setSleepBetweenRetriesMs(int sleep) {
+        regulatorCommunicator.setSleepBetweenRetriesMs(sleep);
+    }
+
+    @Override
     public boolean isConnected() {
         return regulatorCommunicator.isConnected();
     }
