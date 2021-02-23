@@ -31,10 +31,10 @@ public class RealtimeData {
     @EpeverMapper(address = 0x310E, clazz = DataMapper.BigEndianDenominator100Mapper.class)
     public double dischargingEquipmentOutputPower;
 
-    @EpeverMapper(address = 0x3110)
+    @EpeverMapper(address = 0x3110, clazz = DataMapper.SignedDenominator100Mapper.class)
     public double batteryTemperature;
 
-    @EpeverMapper(address = 0x3111)
+    @EpeverMapper(address = 0x3111, clazz = DataMapper.SignedDenominator100Mapper.class)
     public double temperatureInsideEquipment;
 
     @EpeverMapper(address = 0x3112)

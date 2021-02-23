@@ -1,5 +1,6 @@
 package se.divdev.epever.api;
 
+import java.math.BigInteger;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -16,6 +17,20 @@ public interface DataMapper<T> {
 
     default int[] encode(T data) {
         throw new UnsupportedOperationException();
+    }
+
+    default byte[] toBytes(int[] data, boolean signed) {
+        int additionForUnsignedConversion = 0;
+        if (!signed) {
+            additionForUnsignedConversion = (data[data.length - 1] & 0x8000) != 0 ? 1 : 0;
+        }
+        byte[] bytes = new byte[data.length * 2 + additionForUnsignedConversion];
+        int idx = data.length * 2;
+        for (int i = 0; i < data.length; i++) {
+            bytes[--idx] = (byte) (data[i] & 0xFF);
+            bytes[--idx] = (byte) (data[i] >> 8);
+        }
+        return bytes;
     }
 
     static <M extends DataMapper> M getInstance(Class<M> clazz) {
@@ -45,10 +60,27 @@ public interface DataMapper<T> {
         }
     }
 
+    class SignedDenominator100Mapper implements DataMapper<Double> {
+        @Override
+        public Double decode(int... data) {
+            return (double) new BigInteger(toBytes(data, true)).intValue() / 100.d;
+        }
+
+        @Override
+        public int[] encode(Double data) {
+            return new int[]{(int) (data * 100.d)};
+        }
+
+        @Override
+        public int quantity() {
+            return 1;
+        }
+    }
+
     class Denominator100Mapper implements DataMapper<Double> {
         @Override
         public Double decode(int... data) {
-            return (double) data[0] / 100.d;
+            return (double) new BigInteger(toBytes(data, false)).intValue() / 100.d;
         }
 
         @Override
@@ -65,7 +97,7 @@ public interface DataMapper<T> {
     class BigEndianDenominator100Mapper extends Denominator100Mapper {
         @Override
         public Double decode(int... data) {
-            return super.decode((data[1] << 16) + data[0]);
+            return super.decode(data);
         }
 
         @Override

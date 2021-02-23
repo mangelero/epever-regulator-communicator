@@ -2,10 +2,10 @@ package se.divdev.epever.api;
 
 
 import org.junit.jupiter.api.Test;
-import se.divdev.epever.api.DataMapper;
 import se.divdev.epever.api.DataMapper.BigEndianDenominator100Mapper;
 import se.divdev.epever.api.DataMapper.InstantMapper;
 
+import java.math.BigInteger;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -68,5 +68,16 @@ public class DataMapperTest {
 
         assertEquals(i1, mapper.encode(d1)[0]);
         assertEquals(i2, mapper.encode(d2)[0]);
+    }
+
+    @Test
+    public void testNegativeTemperature() {
+        DataMapper.SignedDenominator100Mapper mapper = DataMapper.getInstance(DataMapper.SignedDenominator100Mapper.class);
+
+        int val = 65478;
+        byte[] bytes = mapper.toBytes(new int[]{val}, true);
+        System.out.println(new BigInteger(bytes).intValue() / 100.d);
+        double value = mapper.decode(val);
+        assertEquals(-0.58d, value);
     }
 }

@@ -15,7 +15,6 @@ import se.divdev.epever.api.RegulatorException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class RegulatorCommunicatorImpl implements RegulatorCommunicator {
 
@@ -29,9 +28,9 @@ public class RegulatorCommunicatorImpl implements RegulatorCommunicator {
 
     private final List<Holder> holders = new ArrayList<>();
 
-    private final AtomicInteger retryAttempts = new AtomicInteger(5);
+    private volatile int retryAttempts = 5;
 
-    private final AtomicInteger sleepBetweenRetriesMs = new AtomicInteger(100);
+    private volatile int sleepBetweenRetriesMs = 100;
 
     public RegulatorCommunicatorImpl(final String device) {
         this(device, 1);
@@ -92,12 +91,12 @@ public class RegulatorCommunicatorImpl implements RegulatorCommunicator {
 
     @Override
     public void setRetryAttempts(int retries) {
-        retryAttempts.set(retries);
+        retryAttempts = retries;
     }
 
     @Override
     public void setSleepBetweenRetriesMs(int sleep) {
-        sleepBetweenRetriesMs.set(sleep);
+        sleepBetweenRetriesMs = sleep;
     }
 
     @Override
@@ -170,12 +169,12 @@ public class RegulatorCommunicatorImpl implements RegulatorCommunicator {
         try {
             return findHolder(startAddress).read(startAddress, quantity);
         } catch (RegulatorException e) {
-            if (attempt >= retryAttempts.get()) {
+            if (attempt >= retryAttempts) {
                 LOGGER.error("Error reading from Start Address: {}, Quantity: {}", startAddress, quantity, e);
                 reconnect();
                 return new int[0];
             }
-            sleep(sleepBetweenRetriesMs.get());
+            sleep(sleepBetweenRetriesMs);
             return read(startAddress, quantity, attempt + 1);
         }
     }
@@ -190,12 +189,12 @@ public class RegulatorCommunicatorImpl implements RegulatorCommunicator {
             findHolder(startAddress).write(startAddress, data);
             return true;
         } catch (RegulatorException e) {
-            if (attempt >= retryAttempts.get()) {
+            if (attempt >= retryAttempts) {
                 LOGGER.error("Error writing to Start Address: {}, Quantity: {}", startAddress, data.length, e);
                 reconnect();
                 return false;
             }
-            sleep(sleepBetweenRetriesMs.get());
+            sleep(sleepBetweenRetriesMs);
             return write(data, startAddress, attempt + 1);
         }
     }

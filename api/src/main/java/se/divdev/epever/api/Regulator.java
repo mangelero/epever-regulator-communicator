@@ -111,6 +111,7 @@ public class Regulator {
 
     public static RegulatorData from(final RegulatorRawData data) {
         RegulatorData regulatorData = new RegulatorData();
+
         regulatorData.coils = from(data, Coils.class);
         regulatorData.discreteInput = from(data, DiscreteInput.class);
         regulatorData.ratedData = from(data, RatedData.class);
@@ -119,6 +120,7 @@ public class Regulator {
         regulatorData.batterySettingParameter = from(data, BatterySettingParameter.class);
         regulatorData.settingParameter = from(data, SettingParameter.class);
         regulatorData.statisticalParameter = from(data, StatisticalParameter.class);
+
         return regulatorData;
     }
 
@@ -131,7 +133,8 @@ public class Regulator {
                     values[i] = data.get(information.address + i);
                 }
 
-                information.field.set(result, information.mapper.decode(values));
+                Object decodedValue = information.mapper.decode(values);
+                information.field.set(result, decodedValue);
             }
             return result;
         } catch (Exception e) {
