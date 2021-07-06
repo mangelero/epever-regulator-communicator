@@ -37,7 +37,7 @@ public class RealtimeData {
     @EpeverMapper(address = 0x3111, clazz = DataMapper.SignedDenominator100Mapper.class)
     public double temperatureInsideEquipment;
 
-    @EpeverMapper(address = 0x3112)
+    @EpeverMapper(address = 0x3112, clazz = DataMapper.SignedDenominator100Mapper.class)
     public double powerComponentsTemperature;
 
     @EpeverMapper(address = 0x311A)

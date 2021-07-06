@@ -110,15 +110,10 @@ public interface RegulatorCommunicator {
      */
     default void write(Object object) {
         RegulatorRawData raw = Regulator.toRaw(object);
-        Regulator.fieldInformation(object.getClass()).stream().forEach(info -> {
-            int address = info.address;
-            int[] dataToWrite = new int[info.mapper.quantity()];
-            for (int i = 0; i < dataToWrite.length; i++) {
-                dataToWrite[i] = raw.get(address + i);
-            }
+        raw.clusterData().forEach((address, values) -> {
+            int[] dataToWrite = values.stream().mapToInt(v -> (int) v).toArray();
             boolean success = write(dataToWrite, address);
-            LOGGER.info("Wrote {} integers to address {}: {}", info.mapper.quantity(), address, success);
+            LOGGER.info("Wrote {} integers to address {}: {}", dataToWrite.length, address, success);
         });
-
     }
 }

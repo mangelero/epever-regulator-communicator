@@ -9,44 +9,65 @@ public class BatterySettingParameter {
     public BatteryType batteryType;
 
     @EpeverMapper(address = 0x9001, clazz = DataMapper.IntMapper.class)
-    public int batteryCapacity;
+    public Integer batteryCapacity;
 
-    @EpeverMapper(address = 0x9002)
-    public double temperatureCompensationCoefficient;
+    @EpeverMapper(address = 0x9002, clazz = DataMapper.SignedDenominator100Mapper.class)
+    public Double temperatureCompensationCoefficient;
 
     @EpeverMapper(address = 0x9003)
-    public double highVoltageDisconnect;
+    public Double highVoltageDisconnect;
 
     @EpeverMapper(address = 0x9004)
-    public double chargingLimitVoltage;
+    public Double chargingLimitVoltage;
 
     @EpeverMapper(address = 0x9005)
-    public double overVoltageReconnect;
+    public Double overVoltageReconnect;
 
     @EpeverMapper(address = 0x9006)
-    public double equalizationVoltage;
+    public Double equalizationVoltage;
 
     @EpeverMapper(address = 0x9007)
-    public double boostVoltage;
+    public Double boostVoltage;
 
     @EpeverMapper(address = 0x9008)
-    public double floatVoltage;
+    public Double floatVoltage;
 
     @EpeverMapper(address = 0x9009)
-    public double boostReconnectVoltage;
+    public Double boostReconnectVoltage;
 
     @EpeverMapper(address = 0x900A)
-    public double lowVoltageReconnect;
+    public Double lowVoltageReconnect;
 
     @EpeverMapper(address = 0x900B)
-    public double underVoltageRecover;
+    public Double underVoltageRecover;
 
     @EpeverMapper(address = 0x900C)
-    public double underVoltageWarning;
+    public Double underVoltageWarning;
 
     @EpeverMapper(address = 0x900D)
-    public double lowVoltageDisconnect;
+    public Double lowVoltageDisconnect;
 
     @EpeverMapper(address = 0x900E)
-    public double dischargingLimitVoltage;
+    public Double dischargingLimitVoltage;
+
+    @Override
+    public String toString() {
+        return "BatterySettingParameter{" +
+                "batteryType=" + batteryType +
+                ", batteryCapacity=" + batteryCapacity +
+                ", temperatureCompensationCoefficient=" + temperatureCompensationCoefficient +
+                ", highVoltageDisconnect=" + highVoltageDisconnect +
+                ", chargingLimitVoltage=" + chargingLimitVoltage +
+                ", overVoltageReconnect=" + overVoltageReconnect +
+                ", equalizationVoltage=" + equalizationVoltage +
+                ", boostVoltage=" + boostVoltage +
+                ", floatVoltage=" + floatVoltage +
+                ", boostReconnectVoltage=" + boostReconnectVoltage +
+                ", lowVoltageReconnect=" + lowVoltageReconnect +
+                ", underVoltageRecover=" + underVoltageRecover +
+                ", underVoltageWarning=" + underVoltageWarning +
+                ", lowVoltageDisconnect=" + lowVoltageDisconnect +
+                ", dischargingLimitVoltage=" + dischargingLimitVoltage +
+                '}';
+    }
 }

@@ -2,14 +2,11 @@ package se.divdev.epever.api;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import se.divdev.epever.api.BatteryType;
-import se.divdev.epever.api.Regulator;
-import se.divdev.epever.api.RegulatorCommunicator;
-import se.divdev.epever.api.RegulatorRawData;
 import se.divdev.epever.api.data.BatterySettingParameter;
 import se.divdev.epever.api.data.SettingParameter;
 
 import java.time.Instant;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -67,17 +64,17 @@ public class RegulatorCommunicatorTest {
         BatterySettingParameter settings = new BatterySettingParameter();
         settings.batteryType = BatteryType.FLOODED;
         settings.batteryCapacity = 200;
-        settings.temperatureCompensationCoefficient = 3;
-        settings.highVoltageDisconnect = 32;
-        settings.chargingLimitVoltage = 30;
-        settings.overVoltageReconnect = 30;
+        settings.temperatureCompensationCoefficient = 3D;
+        settings.highVoltageDisconnect = 32D;
+        settings.chargingLimitVoltage = 30D;
+        settings.overVoltageReconnect = 30D;
         settings.equalizationVoltage = 29.6;
         settings.boostVoltage = 29.2;
         settings.floatVoltage = 27.6;
         settings.boostReconnectVoltage = 26.4;
         settings.lowVoltageReconnect = 25.2;
         settings.underVoltageRecover = 24.4;
-        settings.underVoltageWarning = 24;
+        settings.underVoltageWarning = 24D;
         settings.lowVoltageDisconnect = 22.2;
         settings.dischargingLimitVoltage = 21.2;
 
@@ -111,6 +108,32 @@ public class RegulatorCommunicatorTest {
         SettingParameter settingParameter = communicator.read(SettingParameter.class);
         assertEquals(expected, settingParameter.regulatorDateTime);
         communicator.disconnect();
+    }
+
+    @Test
+    public void testGetRawDataInClusters() throws Exception {
+        BatterySettingParameter settings = new BatterySettingParameter();
+        settings.batteryType = BatteryType.FLOODED;
+        settings.batteryCapacity = 200;
+        settings.temperatureCompensationCoefficient = 3D;
+        settings.highVoltageDisconnect = 32D;
+        settings.chargingLimitVoltage = 30D;
+        settings.overVoltageReconnect = 30D;
+        settings.equalizationVoltage = 29.6;
+        settings.boostVoltage = 29.2;
+        settings.floatVoltage = 27.6;
+        settings.boostReconnectVoltage = 26.4;
+        settings.lowVoltageReconnect = 25.2;
+        settings.underVoltageRecover = 24.4;
+        settings.underVoltageWarning = 24D;
+        settings.lowVoltageDisconnect = 22.2;
+        settings.dischargingLimitVoltage = 21.2;
+
+        RegulatorRawData raw = Regulator.toRaw(settings);
+        System.out.println("RAW: " + raw);
+
+        Map<Integer, List<Integer>> clusterData = raw.clusterData();
+        System.out.println("Cluster: " + clusterData);
     }
 
 }
