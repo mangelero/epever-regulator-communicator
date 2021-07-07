@@ -104,14 +104,14 @@ public interface RegulatorCommunicator {
     }
 
     /**
-     * Write and EpeverMapper annotated object to the controller
+     * Write an EpeverMapper annotated object to the controller
      *
      * @param object The object to write
      */
     default void write(Object object) {
         RegulatorRawData raw = Regulator.toRaw(object);
         raw.clusterData().forEach((address, values) -> {
-            int[] dataToWrite = values.stream().mapToInt(v -> (int) v).toArray();
+            int[] dataToWrite = values.stream().mapToInt(v -> v).toArray();
             boolean success = write(dataToWrite, address);
             LOGGER.info("Wrote {} integers to address {}: {}", dataToWrite.length, address, success);
         });

@@ -12,43 +12,43 @@ public class SettingParameter {
     public Instant regulatorDateTime;
 
     @EpeverMapper(address = 0x9016)
-    public double equalizationChargingCycle;
+    public Double equalizationChargingCycle;
 
-    @EpeverMapper(address = 0x9017)
-    public double batteryTemperatureWarningUpperLimit;
+    @EpeverMapper(address = 0x9017, clazz = DataMapper.SignedDenominator100Mapper.class)
+    public Double batteryTemperatureWarningUpperLimit;
 
-    @EpeverMapper(address = 0x9018)
-    public double batteryTemperatureWarningLowerLimit;
+    @EpeverMapper(address = 0x9018, clazz = DataMapper.SignedDenominator100Mapper.class)
+    public Double batteryTemperatureWarningLowerLimit;
 
-    @EpeverMapper(address = 0x9019)
-    public double controllerInnerTemperatureUpperLimit;
+    @EpeverMapper(address = 0x9019, clazz = DataMapper.SignedDenominator100Mapper.class)
+    public Double controllerInnerTemperatureUpperLimit;
 
-    @EpeverMapper(address = 0x901A)
-    public double controllerInnerTemperatureUpperLimitRecover;
+    @EpeverMapper(address = 0x901A, clazz = DataMapper.SignedDenominator100Mapper.class)
+    public Double controllerInnerTemperatureUpperLimitRecover;
 
-    @EpeverMapper(address = 0x901B)
-    public double powerComponentTemperatureUpperLimit;
+    @EpeverMapper(address = 0x901B, clazz = DataMapper.SignedDenominator100Mapper.class)
+    public Double powerComponentTemperatureUpperLimit;
 
-    @EpeverMapper(address = 0x901C)
-    public double powerComponentTemperatureUpperLimitRecover;
+    @EpeverMapper(address = 0x901C, clazz = DataMapper.SignedDenominator100Mapper.class)
+    public Double powerComponentTemperatureUpperLimitRecover;
 
     @EpeverMapper(address = 0x901D)
-    public double lineImpedance;
+    public Double lineImpedance;
 
     @EpeverMapper(address = 0x901E)
-    public double nightTimeThresholdVolt;
+    public Double nightTimeThresholdVolt;
 
     @EpeverMapper(address = 0x901F, clazz = DataMapper.IntMapper.class)
-    public int lightSignalStartupDelayTime;
+    public Integer lightSignalStartupDelayTime;
 
     @EpeverMapper(address = 0x9020)
-    public double dayTimeThresholdVolt;
+    public Double dayTimeThresholdVolt;
 
     @EpeverMapper(address = 0x9021, clazz = DataMapper.IntMapper.class)
-    public int lightSignalTurnOffDelayTime;
+    public Integer lightSignalTurnOffDelayTime;
 
     @EpeverMapper(address = 0x903D, clazz = DataMapper.IntMapper.class)
-    public int loadControllingModes;
+    public Integer loadControllingModes;
 
     @EpeverMapper(address = 0x903E, clazz = DataMapper.DurationMapper.class)
     public Duration workingTimeLength1;
@@ -72,23 +72,23 @@ public class SettingParameter {
     public Duration lengthOfNight;
 
     @EpeverMapper(address = 0x9067, clazz = DataMapper.IntMapper.class)
-    public int batteryRatedVoltage;
+    public Integer batteryRatedVoltage;
 
     @EpeverMapper(address = 0x9069, clazz = DataMapper.IntMapper.class)
-    public int loadTimingControlSelection;
+    public Integer loadTimingControlSelection;
 
     @EpeverMapper(address = 0x906A, clazz = DataMapper.IntMapper.class)
-    public int defaultLoadOnOffInManualMode;
+    public Integer defaultLoadOnOffInManualMode;
 
     @EpeverMapper(address = 0x906B, clazz = DataMapper.IntMapper.class)
-    public int equalizeDurationInMinutes;
+    public Integer equalizeDurationInMinutes;
 
     @EpeverMapper(address = 0x906C, clazz = DataMapper.IntMapper.class)
-    public int boostDurationInMinutes;
+    public Integer boostDurationInMinutes;
 
     @EpeverMapper(address = 0x906D)
-    public double dischargingPercentage;
+    public Double dischargingPercentage;
 
     @EpeverMapper(address = 0x906E)
-    public double chargingPercentage;
+    public Double chargingPercentage;
 }

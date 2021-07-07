@@ -5,50 +5,50 @@ import se.divdev.epever.api.EpeverMapper;
 
 public class StatisticalParameter {
     @EpeverMapper(address = 0x3300)
-    public double maximumInputVoltToday;
+    public Double maximumInputVoltToday;
 
     @EpeverMapper(address = 0x3301)
-    public double minimumInputVoltToday;
+    public Double minimumInputVoltToday;
 
     @EpeverMapper(address = 0x3302)
-    public double maximumBatteryVoltToday;
+    public Double maximumBatteryVoltToday;
 
     @EpeverMapper(address = 0x3303)
-    public double minimumBatteryVoltToday;
+    public Double minimumBatteryVoltToday;
 
     @EpeverMapper(address = 0x3304, clazz = DataMapper.BigEndianDenominator100Mapper.class)
-    public double consumedEnergyToday;
+    public Double consumedEnergyToday;
 
     @EpeverMapper(address = 0x3306, clazz = DataMapper.BigEndianDenominator100Mapper.class)
-    public double consumedEnergyThisMonth;
+    public Double consumedEnergyThisMonth;
 
     @EpeverMapper(address = 0x3308, clazz = DataMapper.BigEndianDenominator100Mapper.class)
-    public double consumedEnergyThisYear;
+    public Double consumedEnergyThisYear;
 
     @EpeverMapper(address = 0x330A, clazz = DataMapper.BigEndianDenominator100Mapper.class)
-    public double totalConsumedEnergy;
+    public Double totalConsumedEnergy;
 
     @EpeverMapper(address = 0x330C, clazz = DataMapper.BigEndianDenominator100Mapper.class)
-    public double generatedEnergyToday;
+    public Double generatedEnergyToday;
 
     @EpeverMapper(address = 0x330E, clazz = DataMapper.BigEndianDenominator100Mapper.class)
-    public double generatedEnergyThisMonth;
+    public Double generatedEnergyThisMonth;
 
     @EpeverMapper(address = 0x3310, clazz = DataMapper.BigEndianDenominator100Mapper.class)
-    public double generatedEnergyThisYear;
+    public Double generatedEnergyThisYear;
 
     @EpeverMapper(address = 0x3312, clazz = DataMapper.BigEndianDenominator100Mapper.class)
-    public double generatedEnergyTotal;
+    public Double generatedEnergyTotal;
 
     @EpeverMapper(address = 0x3314, clazz = DataMapper.BigEndianDenominator100Mapper.class)
-    public double carbonDioxideReduction;
+    public Double carbonDioxideReduction;
 
     @EpeverMapper(address = 0x331B, clazz = DataMapper.BigEndianDenominator100Mapper.class)
-    public double batteryCurrent;
+    public Double batteryCurrent;
 
-    @EpeverMapper(address = 0x331D)
-    public double batteryTemperature2;
+    @EpeverMapper(address = 0x331D, clazz = DataMapper.SignedDenominator100Mapper.class)
+    public Double batteryTemperature2;
 
-    @EpeverMapper(address = 0x331E)
-    public double ambientTemperature;
+    @EpeverMapper(address = 0x331E, clazz = DataMapper.SignedDenominator100Mapper.class)
+    public Double ambientTemperature;
 }

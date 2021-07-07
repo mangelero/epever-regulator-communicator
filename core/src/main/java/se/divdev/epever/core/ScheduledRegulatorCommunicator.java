@@ -124,6 +124,7 @@ public class ScheduledRegulatorCommunicator implements RegulatorCommunicator {
         connectSilent();
         List<Class<?>> readFrom = new ArrayList<>(ALWAYS);
         if (readAllData.compareAndSet(true, false)) {
+            LOGGER.info("Will read all data from controller");
             readFrom.addAll(SOMETIMES);
         }
         readFrom.stream()

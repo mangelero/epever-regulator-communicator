@@ -6,7 +6,8 @@ import se.divdev.epever.api.data.BatterySettingParameter;
 import se.divdev.epever.api.data.SettingParameter;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -45,7 +46,11 @@ public class RegulatorCommunicatorTest {
         public int[] read(int startAddress, int quantity) {
             int[] result = new int[quantity];
             for (int i = 0; i < quantity; i++) {
-                result[i] = data.get(startAddress + i);
+                Integer value = data.get(startAddress + i);
+                if (value == null) {
+                    continue;
+                }
+                result[i] = value;
             }
             return result;
         }

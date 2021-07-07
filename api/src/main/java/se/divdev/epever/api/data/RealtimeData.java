@@ -5,47 +5,47 @@ import se.divdev.epever.api.EpeverMapper;
 
 public class RealtimeData {
     @EpeverMapper(address = 0x3100)
-    public double chargingEquipmentInputVoltage;
+    public Double chargingEquipmentInputVoltage;
 
     @EpeverMapper(address = 0x3101)
-    public double chargingEquipmentInputCurrent;
+    public Double chargingEquipmentInputCurrent;
 
     @EpeverMapper(address = 0x3102, clazz = DataMapper.BigEndianDenominator100Mapper.class)
-    public double chargingEquipmentInputPower;
+    public Double chargingEquipmentInputPower;
 
     @EpeverMapper(address = 0x3104)
-    public double chargingEquipmentOutputVoltage;
+    public Double chargingEquipmentOutputVoltage;
 
     @EpeverMapper(address = 0x3105)
-    public double chargingEquipmentOutputCurrent;
+    public Double chargingEquipmentOutputCurrent;
 
     @EpeverMapper(address = 0x3106, clazz = DataMapper.BigEndianDenominator100Mapper.class)
-    public double chargingEquipmentOutputPower;
+    public Double chargingEquipmentOutputPower;
 
     @EpeverMapper(address = 0x310C)
-    public double dischargingEquipmentOutputVoltage;
+    public Double dischargingEquipmentOutputVoltage;
 
     @EpeverMapper(address = 0x310D)
-    public double dischargingEquipmentOutputCurrent;
+    public Double dischargingEquipmentOutputCurrent;
 
     @EpeverMapper(address = 0x310E, clazz = DataMapper.BigEndianDenominator100Mapper.class)
-    public double dischargingEquipmentOutputPower;
+    public Double dischargingEquipmentOutputPower;
 
     @EpeverMapper(address = 0x3110, clazz = DataMapper.SignedDenominator100Mapper.class)
-    public double batteryTemperature;
+    public Double batteryTemperature;
 
     @EpeverMapper(address = 0x3111, clazz = DataMapper.SignedDenominator100Mapper.class)
-    public double temperatureInsideEquipment;
+    public Double temperatureInsideEquipment;
 
     @EpeverMapper(address = 0x3112, clazz = DataMapper.SignedDenominator100Mapper.class)
-    public double powerComponentsTemperature;
+    public Double powerComponentsTemperature;
 
     @EpeverMapper(address = 0x311A)
-    public double batterySOC;
+    public Double batterySOC;
 
     @EpeverMapper(address = 0x311B)
-    public double remoteBatteryTemperature;
+    public Double remoteBatteryTemperature;
 
     @EpeverMapper(address = 0x311D)
-    public double batteryRealRatedPower;
+    public Double batteryRealRatedPower;
 }

@@ -5,26 +5,26 @@ import se.divdev.epever.api.EpeverMapper;
 
 public class RatedData {
     @EpeverMapper(address = 0x3000)
-    public double chargingEquipmentRatedInputVoltage;
+    public Double chargingEquipmentRatedInputVoltage;
 
     @EpeverMapper(address = 0x3001)
-    public double chargingEquipmentRatedInputCurrent;
+    public Double chargingEquipmentRatedInputCurrent;
 
     @EpeverMapper(address = 0x3002, clazz = DataMapper.BigEndianDenominator100Mapper.class)
-    public double chargingEquipmentRatedInputPower;
+    public Double chargingEquipmentRatedInputPower;
 
     @EpeverMapper(address = 0x3004)
-    public double chargingEquipmentRatedOutputVoltage;
+    public Double chargingEquipmentRatedOutputVoltage;
 
     @EpeverMapper(address = 0x3005)
-    public double chargingEquipmentRatedOutputCurrent;
+    public Double chargingEquipmentRatedOutputCurrent;
 
     @EpeverMapper(address = 0x3006)
-    public double chargingEquipmentRatedOutputPower;
+    public Double chargingEquipmentRatedOutputPower;
 
     @EpeverMapper(address = 0x3008, clazz = DataMapper.ChargingModeMapper.class)
     public String chargingMode;
 
     @EpeverMapper(address = 0x300E)
-    public double ratedOutputCurrentOfLoad;
+    public Double ratedOutputCurrentOfLoad;
 }

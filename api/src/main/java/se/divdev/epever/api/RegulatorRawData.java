@@ -5,32 +5,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class RegulatorRawData extends ConcurrentHashMap<Integer, Integer> {
 
-    @Override
-    public Integer put(Integer key, Integer value) {
-        if (value == 0) {
-            // Don't put 0 values to save space and memory
-            return 0;
-        }
-        return super.put(key, value);
-    }
-
-    @Override
-    public Integer get(Object key) {
-        Integer value = super.get(key);
-        if (value == null) {
-            return 0;
-        }
-        return value;
-    }
-
-    public Integer getOriginal(Object key) {
-        return super.get(key);
-    }
-
     public int[] get(int address, int length) {
         int[] result = new int[length];
         for (int i = 0; i < length; i++) {
-            Integer value = getOriginal(address + i);
+            Integer value = get(address + i);
             if (value == null) {
                 return null;
             }
@@ -70,7 +48,7 @@ public class RegulatorRawData extends ConcurrentHashMap<Integer, Integer> {
             if (lastAddress == null || lastAddress != address - 1) {
                 current = result.computeIfAbsent(address, k -> new ArrayList<>());
             }
-            current.add(getOriginal(address));
+            current.add(get(address));
             lastAddress = address;
         }
         return result;
